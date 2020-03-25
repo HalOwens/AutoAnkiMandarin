@@ -2,7 +2,7 @@ import genanki
 import requests
 
 def notVowel(char):
-    if char == 'a' or char == 'i' or char == 'o' or char == 'e' or char == 'u':
+    if char == 'a' or char == 'i' or char == 'o' or char == 'e' or char == 'u' or str.isdigit(char):
         return False
     else:
         return True
@@ -102,7 +102,7 @@ for x in range(int(cards)):
             elif char[1] == 'o' and pinyin[char[0] + 1] == 'u':
                 newStr += o_tones[tone - 1]
                 toneAssigned = True
-            elif notVowel(pinyin[char[0] + 1]) and (char[1] == 'o' or char[1] == 'u' or char[1] == 'i'):
+            elif notVowelorDig(pinyin[char[0] + 1]) and (char[1] == 'o' or char[1] == 'u' or char[1] == 'i'):
                 if char[1] == 'i':
                     newStr += i_tones[tone-1]
                 elif char[1] == 'o':
