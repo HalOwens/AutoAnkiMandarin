@@ -1,7 +1,7 @@
 import genanki
 import requests
 
-def notVowel(char):
+def notVowelorDig(char):
     if char == 'a' or char == 'i' or char == 'o' or char == 'e' or char == 'u' or str.isdigit(char):
         return False
     else:
