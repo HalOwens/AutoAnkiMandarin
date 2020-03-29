@@ -1,11 +1,11 @@
 import genanki
 import requests
 
-def notVowelorDig(char):
+def vowelorDig(char):
     if char == 'a' or char == 'i' or char == 'o' or char == 'e' or char == 'u' or str.isdigit(char):
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 a_tones = ['ā', 'á', 'ǎ', 'à', 'a']
@@ -102,7 +102,7 @@ for x in range(int(cards)):
             elif char[1] == 'o' and pinyin[char[0] + 1] == 'u':
                 newStr += o_tones[tone - 1]
                 toneAssigned = True
-            elif notVowelorDig(pinyin[char[0] + 1]) and (char[1] == 'o' or char[1] == 'u' or char[1] == 'i'):
+            elif vowelorDig(pinyin[char[0] + 1]) and (char[1] == 'o' or char[1] == 'u' or char[1] == 'i'):
                 if char[1] == 'i':
                     newStr += i_tones[tone-1]
                 elif char[1] == 'o':
@@ -115,6 +115,7 @@ for x in range(int(cards)):
 
     idx = 0
     audioStr = ""
+    print("Correct Pinyin is " + newStr)
     for pinyin in pinyins:
         if noAudio[idx]:
             audioStr += " + " + pinyin
