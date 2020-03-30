@@ -1,12 +1,6 @@
 import genanki
 import requests
 
-def vowelorDig(char):
-    if char == 'a' or char == 'i' or char == 'o' or char == 'e' or char == 'u' or str.isdigit(char):
-        return True
-    else:
-        return False
-
 
 a_tones = ['ā', 'á', 'ǎ', 'à', 'a']
 o_tones = ['ō', 'ó', 'ǒ', 'ò', 'o']
@@ -88,29 +82,36 @@ for x in range(int(cards)):
             pass
         tone = int(tone)
 
-        toneAssigned = False
         lastVowel = None
+        vowelType = None
         for char in enumerate(pinyin):
             if str.isdigit(char[1]):
                 break
             if char[1] == 'a':
-                newStr += a_tones[tone - 1]
-                toneAssigned = True
+                lastVowel = char[0]
+                vowelType = 0
             elif char[1] == 'e':
-                newStr += e_tones[tone - 1]
-                toneAssigned = True
-            elif char[1] == 'o' and pinyin[char[0] + 1] == 'u':
-                newStr += o_tones[tone - 1]
-                toneAssigned = True
-            elif vowelorDig(pinyin[char[0] + 1]) and (char[1] == 'o' or char[1] == 'u' or char[1] == 'i'):
-                if char[1] == 'i':
-                    newStr += i_tones[tone-1]
-                elif char[1] == 'o':
-                    newStr += o_tones[tone-1]
-                elif char[1] == 'u':
-                    newStr += u_tones[tone-1]
-            elif not str.isdigit(char[1]):
-                newStr += char[1]
+                lastVowel = char[0]
+                vowelType = 1
+            elif char[1] == 'u' and pinyin[char[0] - 1] == 'o':
+                lastVowel = char[0] - 1
+                vowelType = 2
+            elif char[1] == 'u':
+                lastVowel = char[0]
+                vowelType = 3
+            elif char[1] == 'i':
+                lastVowel = char[0]
+                vowelType = 4
+        if vowelType == 0:
+            newStr += pinyin[:lastVowel] + a_tones[tone - 1] + pinyin[lastVowel + 1:-1]
+        elif vowelType == 1:
+            newStr += pinyin[:lastVowel] + e_tones[tone - 1] + pinyin[lastVowel + 1:-1]
+        elif vowelType == 2:
+            newStr += pinyin[:lastVowel] + o_tones[tone - 1] + pinyin[lastVowel + 1:-1]
+        elif vowelType == 3:
+            newStr += pinyin[:lastVowel] + u_tones[tone - 1] + pinyin[lastVowel + 1:-1]
+        elif vowelType == 4:
+            newStr += pinyin[:lastVowel] + i_tones[tone - 1] + pinyin[lastVowel + 1:-1]
         idx += 1
 
     idx = 0
