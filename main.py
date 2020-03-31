@@ -90,9 +90,11 @@ for x in range(int(cards)):
             if char[1] == 'a':
                 lastVowel = char[0]
                 vowelType = 0
+                break
             elif char[1] == 'e':
                 lastVowel = char[0]
                 vowelType = 1
+                break
             elif char[1] == 'u' and pinyin[char[0] - 1] == 'o':
                 lastVowel = char[0] - 1
                 vowelType = 2
