@@ -98,6 +98,9 @@ for x in range(int(cards)):
             elif char[1] == 'u' and pinyin[char[0] - 1] == 'o':
                 lastVowel = char[0] - 1
                 vowelType = 2
+            elif char[1] == 'o':
+                lastVowel = char[0]
+                vowelType = 2
             elif char[1] == 'u':
                 lastVowel = char[0]
                 vowelType = 3
