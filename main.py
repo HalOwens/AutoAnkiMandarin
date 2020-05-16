@@ -1,12 +1,13 @@
 import genanki
 import requests
-
+import re
 
 a_tones = ['ā', 'á', 'ǎ', 'à', 'a']
 o_tones = ['ō', 'ó', 'ǒ', 'ò', 'o']
 e_tones = ['ē', 'é', 'ě', 'è', 'e']
 i_tones = ['ī', 'í', 'ǐ', 'ì', 'i']
 u_tones = ['ū', 'ú', 'ǔ', 'ù', 'u']
+v_tones = [' ', 'ǘ', 'ǚ', 'ǜ', ' ']
 
 initialUrl = "https://www.mdbg.net/chinese/rsc/audio/voice_pinyin_pz/"
 failUrl = "https://www.mdbg.net/chinese/rsc/audio/voice_pinyin_cl_mdbg/"
@@ -56,32 +57,29 @@ mandarin_model = genanki.Model(
 
 my_deck = genanki.Deck(2059400110, "Mandaring Waiting room")
 
-print("If you overestimate tough shit this code will crash cause it's ass")
-cards = input("Please enter the number of cards you'd like to make: ")
-for x in range(int(cards)):
+print("To stop making cards put exit into the definition field")
+definition = str()
+while definition != "exit":
     noAudio = False
     definition = input("Enter the Definition: ")
+    if definition == "exit":
+        break
     characters = input("Enter the Characters: ")
-    pinyins = input("Enter the Pinyin separated by spaces: ")
-    pinyins = pinyins.split()
-    noAudio = [False for i in range(len(pinyins))]
-    newStr = ""
-    idx = 0
+    pinyinIn = input("Enter the Pinyin: ")
+    searchPage = requests.get("https://www.trainchinese.com/v2/search.php?searchWord=" + pinyinIn +"&rAp=0&height=0&width=0&tcLanguage=en")
+    try:
+        url = re.findall('playAudio\("(.*?)"', searchPage.text)[0]
+        number = re.findall('[0-9]*', url)[0]
+        url = "https://www.trainchinese.com/v1/word_lists/tc_words/w_dirs/w" + number + "/" + url
+        mp3 = requests.get(url)
+    except:
+        print("Error was unable to find the audio")
+    with open("/home/halowens/Music/AnkiSourceFiles/" + pinyinIn + ".mp3", "wb") as file:
+        file.write(mp3.content)
+    pinyins = re.findall('(.*?[1-5])', pinyinIn)
+    newStr = str()
     for pinyin in pinyins:
-        mp3 = requests.get(initialUrl + pinyin + ".mp3")
-        if mp3.status_code == 404:
-            mp3 = requests.get(failUrl + pinyin + ".mp3")
-            if mp3.status_code == 404:
-                print("Unable to retrieve audio files")
-                noAudio[idx] = True
-        with open("/home/halowens/Music/AnkiSourceFiles/" + pinyin + ".mp3", "wb") as file:
-            file.write(mp3.content)
-
-        tone = None
-        for tone in pinyin:
-            pass
-        tone = int(tone)
-
+        tone = int(pinyin[-1])
         lastVowel = None
         vowelType = None
         for char in enumerate(pinyin):
@@ -107,6 +105,9 @@ for x in range(int(cards)):
             elif char[1] == 'i':
                 lastVowel = char[0]
                 vowelType = 4
+            elif char[1] == 'v':
+                lastVowel = char[0]
+                vowelType = 5
         if vowelType == 0:
             newStr += pinyin[:lastVowel] + a_tones[tone - 1] + pinyin[lastVowel + 1:-1]
         elif vowelType == 1:
@@ -117,17 +118,11 @@ for x in range(int(cards)):
             newStr += pinyin[:lastVowel] + u_tones[tone - 1] + pinyin[lastVowel + 1:-1]
         elif vowelType == 4:
             newStr += pinyin[:lastVowel] + i_tones[tone - 1] + pinyin[lastVowel + 1:-1]
-        idx += 1
-
-    idx = 0
-    audioStr = ""
+        elif vowelType == 5:
+            newStr += pinyin[:lastVowel] + v_tones[tone - 1] + pinyin[lastVowel + 1:-1]
     print("Correct Pinyin is " + newStr)
-    for pinyin in pinyins:
-        if noAudio[idx]:
-            audioStr += " + " + pinyin
-        else:
-            audioStr += "[sound:" + pinyin + ".mp3]"
-        idx += 1
+    audioStr = "[sound:" + pinyinIn + ".mp3]"
+    print(audioStr)
     new_note = genanki.Note(model=mandarin_model, fields=[definition, newStr, characters, audioStr])
     my_deck.add_note(new_note)
     print("+=+=Next Word=+=+")
