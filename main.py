@@ -70,6 +70,7 @@ while definition != "exit":
     try:
         url = re.findall('playAudio\("(.*?)"', searchPage.text)[0]
         number = re.findall('[0-9]*', url)[0]
+        number = number[-3:]
         url = "https://www.trainchinese.com/v1/word_lists/tc_words/w_dirs/w" + number + "/" + url
         mp3 = requests.get(url)
     except:
