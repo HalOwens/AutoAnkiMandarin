@@ -59,6 +59,7 @@ my_deck = genanki.Deck(2059400110, "Mandaring Waiting room")
 
 print("To stop making cards put exit into the definition field")
 definition = str()
+count = 0
 while definition != "exit":
     noAudio = False
     definition = input("Enter the Definition: ")
@@ -67,6 +68,7 @@ while definition != "exit":
     characters = input("Enter the Characters: ")
     pinyinIn = input("Enter the Pinyin: ")
     searchPage = requests.get("https://www.trainchinese.com/v2/search.php?searchWord=" + pinyinIn +"&rAp=0&height=0&width=0&tcLanguage=en")
+    count = count + 1
     try:
         url = re.findall('playAudio\("(.*?)"', searchPage.text)[0]
         number = re.findall('[0-9]*', url)[0]
@@ -130,3 +132,5 @@ while definition != "exit":
 
 genanki.Package(my_deck).write_to_file('/home/halowens/Documents/Anki/output.apkg')
 print("Succesfully generated new deck")
+print(count, "cards made")
+
