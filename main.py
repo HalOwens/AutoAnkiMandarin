@@ -75,6 +75,8 @@ while definition != "exit":
         number = number[-3:]
         if number[0] == "0":
             number = number[1:]
+            if number[0] == "0":
+                number = number[1:]
         url = "https://www.trainchinese.com/v1/word_lists/tc_words/w_dirs/w" + number + "/" + url 
         print(url)
         mp3 = requests.get(url)
