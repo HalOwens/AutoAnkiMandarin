@@ -1,6 +1,7 @@
 import genanki
 import requests
 import re
+import chinese_converter
 
 a_tones = ['ā', 'á', 'ǎ', 'à', 'a']
 o_tones = ['ō', 'ó', 'ǒ', 'ò', 'o']
@@ -66,6 +67,8 @@ while definition != "exit":
     if definition == "exit":
         break
     characters = input("Enter the Characters: ")
+    tradCharacters = chinese_converter.to_traditional(characters)
+    characters = characters + "   " + tradCharacters
     pinyinIn = input("Enter the Pinyin: ")
     searchPage = requests.get("https://www.trainchinese.com/v2/search.php?searchWord=" + pinyinIn +"&rAp=0&height=0&width=0&tcLanguage=en")
     count = count + 1
