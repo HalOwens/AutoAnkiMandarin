@@ -24,11 +24,6 @@ mandarin_model = genanki.Model(
     ],
     templates=[
         {
-            'name': 'Card 1',
-            'qfmt': '{{Pinyin}}<br>{{Sound}}',
-            'afmt': '{{FrontSide}}<hr id="answer">{{English}}<br>{{Character}}',
-        },
-        {
             'name': 'Card 2',
             'qfmt': '{{Character}}',
             'afmt': '{{FrontSide}}<hr id="answer">{{Pinyin}}<br>{{English}}<br>{{Sound}}',
